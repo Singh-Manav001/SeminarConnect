@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SeminarConnect 🎓
+> Educational Seminar & Workshop Marketplace connecting School Principals, Colleges, and Higher Education Institutions with Verified Subject Matter Experts and Guest Speakers.
 
-## Getting Started
+---
 
-First, run the development server:
+## 🌟 Overview
+
+**SeminarConnect** is a full-stack educational technology marketplace built to streamline how schools, polytechnics, colleges, and coaching academies discover, evaluate, book, and fund certified guest faculty and workshop trainers.
+
+- **For Institutions (School Principals & Deans)**: Find verified experts mapped to curriculum and NEP-2020 experiential learning tracks, post requests on the Seminar Requirement Board, book with real-time distance calculations, and download official GST tax invoices with escrow payment protection.
+- **For Candidate Speakers (Researchers & Trainers)**: Showcase credentials, syllabus packages, and video portfolios; manage availability calendars without double-booking; receive and accept institutional booking requests; and track INR payouts.
+- **For Directorate Administrators**: Approve background verifications, oversee bookings, manage 12 curriculum-aligned categories, resolve disputes, and configure platform commissions.
+
+---
+
+## 🛠️ Technology Stack
+
+- **Framework**: [Next.js 14 App Router](https://nextjs.org/) (Server Components & API Routes)
+- **Language**: [TypeScript 5](https://www.typescriptlang.org/) (Strict type safety)
+- **Styling**: [Tailwind CSS 3](https://tailwindcss.com/) (Navy blue, Indigo, and Subtle Teal aesthetic)
+- **Database & Auth**: [Supabase](https://supabase.com/) (PostgreSQL 22+ tables, Row Level Security policies, relational indexes) with dual-mode zero-config persistent local fallback store (`.data/seminar_connect_db.json`)
+- **Validation**: [Zod](https://zod.dev/) & [React Hook Form](https://react-hook-form.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Geocoding & Proximity**: Haversine distance calculator with Indian cities coordinate database
+- **Payments**: Indian Rupee (INR ₹) transaction engine with Razorpay escrow support & verified signature test mode
+- **Testing**: [Playwright](https://playwright.dev/) End-to-End browser test suite
+
+---
+
+## 👥 Pre-configured Demo Accounts
+
+For fast local testing and demonstration, use the 1-click test buttons on the `/login` screen or the top sandbox switch bar:
+
+| Role | Name & Title | Email | Password |
+|---|---|---|---|
+| **Principal** | Dr. Rajesh Sharma (Principal, DPS R.K. Puram) | `principal@dps-delhi.edu` | `Password123!` |
+| **Principal** | Dr. Meenakshi Sundaram (Dean, National College) | `dean@national-college.edu` | `Password123!` |
+| **Speaker** | Dr. Ananya Roy (Lead AI Researcher, Ex-IISc) | `ananya.ai@seminarconnect.com` | `Password123!` |
+| **Speaker** | Vikramaditya Verma (Robotics & IoT Expert, IITD) | `vikram.iot@seminarconnect.com` | `Password123!` |
+| **Speaker** | Priya Nair (Executive Career Strategist, XLRI) | `priya.career@seminarconnect.com` | `Password123!` |
+| **Admin** | Central Directorate (Marketplace Administrator) | `admin@seminarconnect.com` | `AdminSecret2026!` |
+
+---
+
+## 🗄️ Database Design & Supabase Migrations
+
+The complete database schema is located in `supabase/migrations/20261022000001_seminarconnect_schema.sql` and includes 22 normalized tables:
+
+1. `profiles`
+2. `institutions`
+3. `candidate_profiles`
+4. `categories`
+5. `skills` & `candidate_skills`
+6. `seminar_offerings`
+7. `qualifications`
+8. `verification_documents`
+9. `service_locations`
+10. `availability_slots`
+11. `seminar_requirements`
+12. `bookings` (with candidate double-booking concurrency index)
+13. `booking_status_history`
+14. `payments`
+15. `refunds`
+16. `payouts`
+17. `conversations` & `messages`
+18. `notifications`
+19. `favorites`
+20. `reviews`
+21. `disputes`
+22. `platform_settings` & `admin_audit_logs`
+
+### 12 Database-Backed Categories:
+- C and C++ Programming
+- HTML, CSS, JavaScript, and Web Development
+- Python, Java, and App Development
+- Artificial Intelligence and Machine Learning
+- Data Science and Cybersecurity
+- Robotics and Internet of Things
+- Science and Mathematics
+- Career Guidance and Interview Preparation
+- Communication and Personality Development
+- Entrepreneurship and Financial Literacy
+- Digital Marketing and Design
+- Other Custom Topics
+
+---
+
+## 🚀 Getting Started
+
+### 1. Installation
+
+```bash
+cd seminar-connect
+npm install --legacy-peer-deps
+```
+
+### 2. Environment Configuration
+
+Copy the example environment file:
+
+```bash
+cp .env.example .env.local
+```
+
+### 3. Run the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. Build for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+### 5. Run Playwright End-to-End Tests
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npx playwright test
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 💳 Indian Payments & Escrow Model
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Fee Calculation**: Base Seminar Fee + Travel Allowance (if offline, calculated via distance × per-km rate) + 10% Platform Escrow Fee + 18% GST on platform services = Total Payable.
+2. **Escrow Guarantee**: Funds remain in escrow until the host principal marks the seminar delivered.
+3. **Cancellation Policy**: Full 100% refund up to 48 hours prior to seminar start time.
+4. **GST Tax Invoices**: Printable official invoice with SAC code 999293 and GSTIN.
